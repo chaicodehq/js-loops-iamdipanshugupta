@@ -1,6 +1,6 @@
 /**
  * 🪔 Sharma ji ki Diwali Decoration
- *
+ *   
  * Sharma ji apne ghar ko Diwali pe sajana chahte hain light strings se.
  * Unke paas ek budget hai aur market mein alag alag colors ki light strings
  * hain different lengths mein. Sharma ji sab kuch lena chahte hain, lekin
@@ -38,5 +38,56 @@
  *   // => { selected: [{ color: "golden", length: 5, cost: 250 }], totalLength: 5, totalCost: 250 }
  */
 export function diwaliLightsPlan(lightStrings, budget) {
-  // Your code here
+  if (
+    !Array.isArray(lightStrings) ||
+    typeof budget !== "number" ||
+    budget <= 0 ||
+    isNaN(budget)
+  ) {
+    return { selected: [], totalLength: 0, totalCost: 0 };
+  }
+
+  let selected = [];
+  let totalLength = 0;
+  let totalCost = 0;
+
+  for (const light of lightStrings) {
+    if (
+      !light ||
+      typeof light.color !== "string" ||
+      typeof light.length !== "number" ||
+      light.length <= 0
+    ) {
+      continue;
+    }
+
+    let rate;
+    if (light.color === "golden") {
+      rate = 50;
+    } else if (light.color === "multicolor") {
+      rate = 40;
+    } else if (light.color === "white") {
+      rate = 30;
+    } else {
+      rate = 35;
+    }
+
+    const cost = rate * light.length;
+    selected.push({
+      color:light.color,
+      length: light.length,
+      cost:cost
+    });
+
+    totalCost += cost;
+    totalLength += light.length;
+  }
+
+  while(totalCost > budget && selected.length > 0){
+    const removed = selected.pop();
+    totalCost -= removed.cost;
+    totalLength -= removed.length;
+  }
+
+  return {selected, totalLength, totalCost};
 }
